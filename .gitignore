@@ -1,0 +1,15 @@
+*.iml
+.idea
+
+/target
+
+npm-debug.log
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+*.pyc
+*.project
+*.classpath
+*.settings
+*.csv
+*.txt
