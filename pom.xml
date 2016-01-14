@@ -44,6 +44,7 @@
     </profiles>
 
     <build>
+    	<testSourceDirectory>src/test/java</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -69,6 +70,7 @@
                         <configuration>
                             <sources>
                                 <source>src/main/java</source>
+                                <source>src/test/java</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -194,6 +196,17 @@
             <artifactId>mockito-core</artifactId>
             <version>${mockito-version}</version>
         </dependency>
+        <dependency>
+        	<groupId>org.powermock</groupId>
+        	<artifactId>powermock-api-mockito</artifactId>
+        	<version>${powermock-api-version}</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.powermock</groupId>
+        	<artifactId>powermock-module-junit4</artifactId>
+        	<version>${powermock-module-version}</version>
+		</dependency>
+        	
 
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
@@ -269,7 +282,9 @@
         <junit-version>4.10</junit-version>
         <testng.version>6.8.8</testng.version>
         <surefire-junit47.version>2.19</surefire-junit47.version>
-        <mockito-version>1.9.5</mockito-version>
+        <mockito-version>1.10.19</mockito-version>
+        <powermock-api-version>1.6.2</powermock-api-version>
+        <powermock-module-version>1.6.2</powermock-module-version>
         <org-jboss-resteasy.version>3.0.13.Final</org-jboss-resteasy.version>
         <maven-surefire-plugin.version>2.19</maven-surefire-plugin.version>
         <maven-surefire-report-plugin.version>2.19</maven-surefire-report-plugin.version>
