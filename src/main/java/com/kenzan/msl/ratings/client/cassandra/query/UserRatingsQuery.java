@@ -51,8 +51,8 @@ public class UserRatingsQuery extends RatingsHelper {
     public static UserRatingsDao getRating(final QueryAccessor queryAccessor, final MappingManager manager,
                                            final UUID userId, final UUID contentId, final String contentType) {
         if ( isValidContentType(contentType) ) {
-            return manager.mapper(UserRatingsDao.class)
-                .map(queryAccessor.getUserRating(userId, contentId, contentType)).one();
+            ResultSet userRatingResult = queryAccessor.getUserRating(userId, contentId, contentType);
+            return manager.mapper(UserRatingsDao.class).map(userRatingResult).one();
         }
         else {
             throw new RuntimeException(String.format("Invalid contentType: %s", contentType));
