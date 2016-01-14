@@ -1,64 +1,125 @@
 package com.kenzan.msl.ratings.client.cassandra.query;
 
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.mapping.Mapper;
+import com.datastax.driver.mapping.Result;
+import com.kenzan.msl.ratings.client.dao.AverageRatingsDao;
+import org.easymock.EasyMock;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Answers;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import com.datastax.driver.mapping.MappingManager;
 import com.kenzan.msl.ratings.client.TestConstants;
 import com.kenzan.msl.ratings.client.cassandra.QueryAccessor;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ MappingManager.class })
 public class AverageRatingsQueryTest {
-
-    private TestConstants tc = TestConstants.getInstance();
 
     @Mock
     private QueryAccessor queryAccessor;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private MappingManager mappingManager;
+
+    private TestConstants tc = TestConstants.getInstance();
+
+    private MappingManager manager;
+    private Mapper mapper;
+    private Result result;
+    private ResultSet resultSet;
 
     @Before
-    public void init() {
+    public void init()
+        throws Exception {
+        MockitoAnnotations.initMocks(this);
 
-        // TODO mock mappingManager.manager chained methods
-        // mappingManager = Mockito.mock(MappingManager.class);
-        // when(mappingManager.mapper(AverageRatingsDao.class).map(Mockito.anyObject()).one()).thenReturn(tc.AVERAGE_RATINGS_DAO);
+        resultSet = EasyMock.createMock(ResultSet.class);
+        manager = PowerMockito.mock(MappingManager.class);
+        mapper = PowerMockito.mock(Mapper.class);
+        result = PowerMockito.mock(Result.class);
     }
 
     @Test
-    @Ignore
     public void testAdd() {
-        AverageRatingsQuery.add(queryAccessor, mappingManager, tc.AVERAGE_RATINGS_DAO);
+        mockGetMethod();
+        AverageRatingsQuery.add(queryAccessor, manager, tc.AVERAGE_RATINGS_DAO);
         verify(queryAccessor, atLeastOnce()).setAverageRating(tc.AVERAGE_RATINGS_DAO.getContentId(),
                                                               tc.AVERAGE_RATINGS_DAO.getContentType(),
                                                               tc.AVERAGE_RATINGS_DAO.getNumRating(),
                                                               tc.AVERAGE_RATINGS_DAO.getSumRating());
     }
 
-    @Test
-    @Ignore
-    public void testGet() {
-        AverageRatingsQuery.get(queryAccessor, mappingManager, tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
-        verify(queryAccessor, atLeastOnce()).getAverageRating(tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
+    @Test(expected = RuntimeException.class)
+    public void testUnableToAdd() {
+        mockNullGetMethod();
+        AverageRatingsQuery.add(queryAccessor, manager, tc.AVERAGE_RATINGS_DAO);
     }
 
     @Test(expected = RuntimeException.class)
-    public void testGetThrowException() {
-        AverageRatingsQuery.get(queryAccessor, mappingManager, null, null);
+    public void testInvalidContentTypeExceptionAdd() {
+        AverageRatingsQuery.get(queryAccessor, manager, tc.ALBUM_ID, "INVALID_CONTENT_TYPE");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testUnableToAddException() {
+        mockNullGetMethod();
+        AverageRatingsQuery.add(queryAccessor, manager, tc.AVERAGE_RATINGS_DAO);
     }
 
     @Test
-    @Ignore
+    public void testGet() {
+        mockGetMethod();
+        AverageRatingsDao results = AverageRatingsQuery.get(queryAccessor, manager, tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
+        assertNotNull(results);
+        assertEquals(results, tc.AVERAGE_RATINGS_DAO);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetInvalidContentType() {
+        AverageRatingsQuery.get(queryAccessor, manager, tc.ALBUM_ID, "INVALID_CONTENT_TYPE");
+    }
+
+    @Test
     public void testDelete() {
-        AverageRatingsQuery.delete(queryAccessor, mappingManager, tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
+        mockNullGetMethod();
+        AverageRatingsQuery.delete(queryAccessor, manager, tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
         verify(queryAccessor, atLeastOnce()).deleteAverageRating(tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
     }
 
     @Test(expected = RuntimeException.class)
-    public void testDeleteThrowsException() {
-        AverageRatingsQuery.delete(queryAccessor, mappingManager, null, null);
+    public void testUnableToDelete() {
+        mockGetMethod();
+        AverageRatingsQuery.delete(queryAccessor, manager, tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
+        verify(queryAccessor, atLeastOnce()).deleteAverageRating(tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testDeleteInvalidContentException() {
+        AverageRatingsQuery.delete(queryAccessor, manager, null, null);
+    }
+
+    /* ******************************************************* */
+
+    private void mockGetMethod() {
+        Mockito.when(queryAccessor.getAverageRating(Mockito.anyObject(), Mockito.anyObject())).thenReturn(resultSet);
+        PowerMockito.when(manager.mapper(AverageRatingsDao.class)).thenReturn(mapper);
+        PowerMockito.when(mapper.map(resultSet)).thenReturn(result);
+        PowerMockito.when(result.one()).thenReturn(tc.AVERAGE_RATINGS_DAO);
+    }
+
+    private void mockNullGetMethod() {
+        Mockito.when(queryAccessor.getAverageRating(Mockito.anyObject(), Mockito.anyObject())).thenReturn(resultSet);
+        PowerMockito.when(manager.mapper(AverageRatingsDao.class)).thenReturn(mapper);
+        PowerMockito.when(mapper.map(resultSet)).thenReturn(result);
+        PowerMockito.when(result.one()).thenReturn(null);
     }
 }
