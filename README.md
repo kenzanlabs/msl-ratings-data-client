@@ -26,3 +26,21 @@ So a microservice that needs to access Cassandra data will include one or more o
 ```bash 
 mvn clean package && mvn -P install compile
 ```
+
+To format code
+```
+mvn clean formatter:format
+```
+
+##Reports
+###Surefire reports:
+```
+mvn site
+```
+report gets generated under /target/site/index.html
+ 
+###Cobertura
+```
+mvn cobertura:cobertura
+```
+report gets generated under /target/site/cobertura/index.html
