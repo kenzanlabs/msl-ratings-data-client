@@ -1,5 +1,5 @@
 /*
- * Copyright 2015, Charter Communications, All rights reserved.
+ * Copyright 2015, Kenzan, All rights reserved.
  */
 package com.kenzan.msl.ratings.client.cassandra;
 
