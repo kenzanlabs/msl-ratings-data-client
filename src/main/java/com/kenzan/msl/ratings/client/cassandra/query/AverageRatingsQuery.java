@@ -52,9 +52,8 @@ public class AverageRatingsQuery extends RatingsHelper {
             return manager.mapper(AverageRatingsDao.class).map(queryAccessor.getAverageRating(contentId, contentType))
                 .one();
         }
-        else {
-            throw new RuntimeException(String.format("Invalid contentType: %s", contentType));
-        }
+        
+		throw new RuntimeException(String.format("Invalid contentType: %s", contentType));
     }
 
     /**
