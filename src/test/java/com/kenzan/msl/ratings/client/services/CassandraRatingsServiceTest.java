@@ -44,14 +44,12 @@ public class CassandraRatingsServiceTest {
     private TestConstants tc = TestConstants.getInstance();
     private CassandraRatingsService cassandraRatingsService;
     private ResultSet resultSet;
-    private Observable<ResultSet> observableResultSet;
     private MappingManager manager;
 
     @Before
     public void init()
         throws Exception {
         resultSet = createMock(ResultSet.class);
-        observableResultSet = Observable.just(resultSet);
 
         Session session = PowerMock.createMock(Session.class);
         Cluster cluster = PowerMock.createMock(Cluster.class);
