@@ -5,7 +5,6 @@ import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
 
-import com.kenzan.msl.ratings.client.dao.AverageRatingsDao;
 import com.kenzan.msl.ratings.client.dao.UserRatingsDao;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -35,8 +34,8 @@ public class UserRatingsQueryTest {
     private TestConstants tc = TestConstants.getInstance();
 
     private MappingManager manager;
-    private Mapper mapper;
-    private Result result;
+    private Mapper<UserRatingsDao> mapper;
+    private Result<UserRatingsDao> result;
     private ResultSet resultSet;
 
     @Before

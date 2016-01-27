@@ -2,10 +2,7 @@ package com.kenzan.msl.ratings.client.services;
 
 import static org.easymock.EasyMock.createMock;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
@@ -18,8 +15,6 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.api.mockito.PowerMockito;
@@ -30,7 +25,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.datastax.driver.mapping.MappingManager;
 import com.kenzan.msl.ratings.client.TestConstants;
 import com.kenzan.msl.ratings.client.dao.AverageRatingsDao;
-import com.kenzan.msl.ratings.client.cassandra.QueryAccessor;
 import com.kenzan.msl.ratings.client.cassandra.query.AverageRatingsQuery;
 import com.kenzan.msl.ratings.client.cassandra.query.UserRatingsQuery;
 
@@ -72,10 +66,13 @@ public class CassandraRatingsServiceTest {
         manager = PowerMockito.mock(MappingManager.class);
         PowerMockito.whenNew(MappingManager.class).withAnyArguments().thenReturn(manager);
 
-        Mapper myMapper = PowerMockito.mock(Mapper.class);
-        PowerMockito.when(manager.mapper(UserRatingsDao.class)).thenReturn(myMapper);
-        PowerMockito.when(manager.mapper(AverageRatingsDao.class)).thenReturn(myMapper);
-        PowerMockito.when(myMapper.map(resultSet)).thenReturn(null);
+        Mapper<UserRatingsDao> myUserRatingsMapper = PowerMockito.mock(Mapper.class);
+        PowerMockito.when(manager.mapper(UserRatingsDao.class)).thenReturn(myUserRatingsMapper);
+        PowerMockito.when(myUserRatingsMapper.map(resultSet)).thenReturn(null);
+        
+        Mapper<AverageRatingsDao> myAverageRatingsMapper = PowerMockito.mock(Mapper.class);
+        PowerMockito.when(manager.mapper(AverageRatingsDao.class)).thenReturn(myAverageRatingsMapper);
+        PowerMockito.when(myAverageRatingsMapper.map(resultSet)).thenReturn(null);
 
         PowerMockito.mockStatic(AverageRatingsQuery.class);
         PowerMockito.mockStatic(UserRatingsQuery.class);
