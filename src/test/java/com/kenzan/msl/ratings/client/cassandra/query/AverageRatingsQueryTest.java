@@ -33,8 +33,8 @@ public class AverageRatingsQueryTest {
     private TestConstants tc = TestConstants.getInstance();
 
     private MappingManager manager;
-    private Mapper mapper;
-    private Result result;
+    private Mapper<AverageRatingsDao> mapper;
+    private Result<AverageRatingsDao> result;
     private ResultSet resultSet;
 
     @Before
