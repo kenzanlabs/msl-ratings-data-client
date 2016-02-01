@@ -12,8 +12,8 @@ import com.google.common.base.Optional;
 import com.kenzan.msl.ratings.client.cassandra.QueryAccessor;
 import com.kenzan.msl.ratings.client.cassandra.query.AverageRatingsQuery;
 import com.kenzan.msl.ratings.client.cassandra.query.UserRatingsQuery;
-import com.kenzan.msl.ratings.client.dao.AverageRatingsDao;
-import com.kenzan.msl.ratings.client.dao.UserRatingsDao;
+import com.kenzan.msl.ratings.client.dto.AverageRatingsDto;
+import com.kenzan.msl.ratings.client.dto.UserRatingsDto;
 import rx.Observable;
 
 import java.util.UUID;
@@ -51,11 +51,11 @@ public class CassandraRatingsService
     /**
      * Adds or update an average rating to the average_ratings table
      *
-     * @param averageRatingDao com.kenzan.msl.ratings.client.dao.AverageRatingsDao
+     * @param averageRatingDto com.kenzan.msl.ratings.client.dto.AverageRatingsDto
      * @return Observable<Void>
      */
-    public Observable<Void> addOrUpdateAverageRating(AverageRatingsDao averageRatingDao) {
-        AverageRatingsQuery.add(queryAccessor, mappingManager, averageRatingDao);
+    public Observable<Void> addOrUpdateAverageRating(AverageRatingsDto averageRatingDto) {
+        AverageRatingsQuery.add(queryAccessor, mappingManager, averageRatingDto);
         return Observable.empty();
     }
 
@@ -64,9 +64,9 @@ public class CassandraRatingsService
      *
      * @param contentId java.util.UUID
      * @param contentType String
-     * @return Observable<AverageRatingsDao>
+     * @return Observable<AverageRatingsDto>
      */
-    public Observable<AverageRatingsDao> getAverageRating(UUID contentId, String contentType) {
+    public Observable<AverageRatingsDto> getAverageRating(UUID contentId, String contentType) {
         return Observable.just(AverageRatingsQuery.get(queryAccessor, mappingManager, contentId, contentType));
     }
 
@@ -89,11 +89,11 @@ public class CassandraRatingsService
     /**
      * Adds a user rating to the user_ratings table
      *
-     * @param userRatingsDao com.kenzan.msl.ratings.client.dao.UserRatingsDao
+     * @param userRatingsDto com.kenzan.msl.ratings.client.dto.UserRatingsDto
      * @return Observable<Void>
      */
-    public Observable<Void> addOrUpdateUserRatings(UserRatingsDao userRatingsDao) {
-        UserRatingsQuery.add(queryAccessor, mappingManager, userRatingsDao);
+    public Observable<Void> addOrUpdateUserRatings(UserRatingsDto userRatingsDto) {
+        UserRatingsQuery.add(queryAccessor, mappingManager, userRatingsDto);
         return Observable.empty();
     }
 
@@ -103,9 +103,9 @@ public class CassandraRatingsService
      * @param userUuid java.util.UUID
      * @param contentType String
      * @param contentUuid java.util.UUID
-     * @return Observable<UserRatingsDao>
+     * @return Observable<UserRatingsDto>
      */
-    public Observable<UserRatingsDao> getUserRating(UUID userUuid, String contentType, UUID contentUuid) {
+    public Observable<UserRatingsDto> getUserRating(UUID userUuid, String contentType, UUID contentUuid) {
         return Observable.just(UserRatingsQuery.getRating(queryAccessor, mappingManager, userUuid, contentUuid,
                                                           contentType));
     }
@@ -123,13 +123,13 @@ public class CassandraRatingsService
     }
 
     /**
-     * Maps a result set object into a userRatingsDao result set
+     * Maps a result set object into a userRatingsDto result set
      * 
      * @param object Observable<ResultSet>
-     * @return Observable<Result<UserRatingsDao>>
+     * @return Observable<Result<UserRatingsDto>>
      */
-    public Observable<Result<UserRatingsDao>> mapUserRatings(Observable<ResultSet> object) {
-        return Observable.just(mappingManager.mapper(UserRatingsDao.class).map(object.toBlocking().first()));
+    public Observable<Result<UserRatingsDto>> mapUserRatings(Observable<ResultSet> object) {
+        return Observable.just(mappingManager.mapper(UserRatingsDto.class).map(object.toBlocking().first()));
     }
 
     /**

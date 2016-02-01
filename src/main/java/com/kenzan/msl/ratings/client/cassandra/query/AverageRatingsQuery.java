@@ -5,7 +5,7 @@ package com.kenzan.msl.ratings.client.cassandra.query;
 
 import com.datastax.driver.mapping.MappingManager;
 import com.kenzan.msl.ratings.client.cassandra.QueryAccessor;
-import com.kenzan.msl.ratings.client.dao.AverageRatingsDao;
+import com.kenzan.msl.ratings.client.dto.AverageRatingsDto;
 
 import java.util.UUID;
 
@@ -16,19 +16,19 @@ public class AverageRatingsQuery extends RatingsHelper {
      * 
      * @param queryAccessor com.kenzan.msl.ratings.client.cassandra.QueryAccessor
      * @param manager com.datastax.driver.mapping.MappingManager
-     * @param averageRatingsDao com.kenzan.msl.ratings.client.dao.AverageRatingsDao
+     * @param averageRatingsDto com.kenzan.msl.ratings.client.dto.AverageRatingsDto
      */
     public static void add(final QueryAccessor queryAccessor, final MappingManager manager,
-                           final AverageRatingsDao averageRatingsDao) {
+                           final AverageRatingsDto averageRatingsDto) {
 
-        String contentType = averageRatingsDao.getContentType();
+        String contentType = averageRatingsDto.getContentType();
         if ( isValidContentType(contentType) ) {
-            queryAccessor.setAverageRating(averageRatingsDao.getContentId(), averageRatingsDao.getContentType(),
-                                           averageRatingsDao.getNumRating(), averageRatingsDao.getSumRating());
+            queryAccessor.setAverageRating(averageRatingsDto.getContentId(), averageRatingsDto.getContentType(),
+                                           averageRatingsDto.getNumRating(), averageRatingsDto.getSumRating());
             // Verifies that average rating was in fact added
-            if ( get(queryAccessor, manager, averageRatingsDao.getContentId(), averageRatingsDao.getContentType()) == null ) {
+            if ( get(queryAccessor, manager, averageRatingsDto.getContentId(), averageRatingsDto.getContentType()) == null ) {
                 throw new RuntimeException(String.format("Unable to add to average_ratings, contentId: %s",
-                                                         averageRatingsDao.getContentId()));
+                                                         averageRatingsDto.getContentId()));
             }
         }
         else {
@@ -43,17 +43,17 @@ public class AverageRatingsQuery extends RatingsHelper {
      * @param manager com.datastax.driver.mapping.MappingManager
      * @param contentId java.util.UUID
      * @param contentType String
-     * @return com.kenzan.msl.ratings.client.dao.AverageRatingsDao
+     * @return com.kenzan.msl.ratings.client.dto.AverageRatingsDto
      */
-    public static AverageRatingsDao get(final QueryAccessor queryAccessor, final MappingManager manager,
+    public static AverageRatingsDto get(final QueryAccessor queryAccessor, final MappingManager manager,
                                         final UUID contentId, final String contentType) {
 
         if ( isValidContentType(contentType) ) {
-            return manager.mapper(AverageRatingsDao.class).map(queryAccessor.getAverageRating(contentId, contentType))
+            return manager.mapper(AverageRatingsDto.class).map(queryAccessor.getAverageRating(contentId, contentType))
                 .one();
         }
-        
-		throw new RuntimeException(String.format("Invalid contentType: %s", contentType));
+
+        throw new RuntimeException(String.format("Invalid contentType: %s", contentType));
     }
 
     /**
