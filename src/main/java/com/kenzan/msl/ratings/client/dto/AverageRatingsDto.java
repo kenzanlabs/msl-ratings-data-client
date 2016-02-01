@@ -1,12 +1,12 @@
 /*
  * Copyright 2015, Kenzan, All rights reserved.
  */
-package com.kenzan.msl.ratings.client.dao;
+package com.kenzan.msl.ratings.client.dto;
 
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
-import com.kenzan.msl.common.dao.AbstractDao;
+import com.kenzan.msl.common.dto.AbstractDto;
 
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ import java.util.UUID;
  * @author billschwanitz
  */
 @Table(name = "average_ratings")
-public class AverageRatingsDao extends AbstractDao {
+public class AverageRatingsDto extends AbstractDto {
     @PartitionKey
     @Column(name = "content_id")
     private UUID contentId;

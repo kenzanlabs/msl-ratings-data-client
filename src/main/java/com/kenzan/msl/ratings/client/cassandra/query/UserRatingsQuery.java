@@ -7,7 +7,7 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.mapping.MappingManager;
 import com.google.common.base.Optional;
 import com.kenzan.msl.ratings.client.cassandra.QueryAccessor;
-import com.kenzan.msl.ratings.client.dao.UserRatingsDao;
+import com.kenzan.msl.ratings.client.dto.UserRatingsDto;
 
 import java.util.UUID;
 
@@ -18,19 +18,19 @@ public class UserRatingsQuery extends RatingsHelper {
      *
      * @param queryAccessor com.kenzan.msl.ratings.client.cassandra.QueryAccessor
      * @param manager com.datastax.driver.mapping.MappingManager
-     * @param userRatingsDao com.kenzan.msl.ratings.client.dao.UserRatingsDao
+     * @param userRatingsDto com.kenzan.msl.ratings.client.dto.UserRatingsDto
      */
     public static void add(final QueryAccessor queryAccessor, final MappingManager manager,
-                           final UserRatingsDao userRatingsDao) {
-        String contentType = userRatingsDao.getContentType();
+                           final UserRatingsDto userRatingsDto) {
+        String contentType = userRatingsDto.getContentType();
         if ( isValidContentType(contentType) ) {
-            queryAccessor.setUserRating(userRatingsDao.getUserId(), userRatingsDao.getContentUuid(), contentType,
-                                        userRatingsDao.getRating());
+            queryAccessor.setUserRating(userRatingsDto.getUserId(), userRatingsDto.getContentUuid(), contentType,
+                                        userRatingsDto.getRating());
             // Verifies that user rating was in fact added
-            if ( getRating(queryAccessor, manager, userRatingsDao.getUserId(), userRatingsDao.getContentUuid(),
+            if ( getRating(queryAccessor, manager, userRatingsDto.getUserId(), userRatingsDto.getContentUuid(),
                            contentType) == null ) {
                 throw new RuntimeException(String.format("Unable to add to user_ratings, contentId: %s, userId: %s",
-                                                         userRatingsDao.getContentUuid(), userRatingsDao.getUserId()));
+                                                         userRatingsDto.getContentUuid(), userRatingsDto.getUserId()));
             }
         }
         else {
@@ -46,13 +46,13 @@ public class UserRatingsQuery extends RatingsHelper {
      * @param userId java.util.UUID
      * @param contentId java.util.UUID
      * @param contentType String
-     * @return com.kenzan.msl.ratings.client.dao.UserRatingsDao
+     * @return com.kenzan.msl.ratings.client.dto.UserRatingsDto
      */
-    public static UserRatingsDao getRating(final QueryAccessor queryAccessor, final MappingManager manager,
+    public static UserRatingsDto getRating(final QueryAccessor queryAccessor, final MappingManager manager,
                                            final UUID userId, final UUID contentId, final String contentType) {
         if ( isValidContentType(contentType) ) {
             ResultSet userRatingResult = queryAccessor.getUserRating(userId, contentId, contentType);
-            return manager.mapper(UserRatingsDao.class).map(userRatingResult).one();
+            return manager.mapper(UserRatingsDto.class).map(userRatingResult).one();
         }
         
 		throw new RuntimeException(String.format("Invalid contentType: %s", contentType));
