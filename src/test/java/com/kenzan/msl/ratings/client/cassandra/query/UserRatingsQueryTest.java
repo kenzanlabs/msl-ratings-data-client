@@ -5,7 +5,7 @@ import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
 
-import com.kenzan.msl.ratings.client.dao.UserRatingsDao;
+import com.kenzan.msl.ratings.client.dto.UserRatingsDto;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,8 +34,8 @@ public class UserRatingsQueryTest {
     private TestConstants tc = TestConstants.getInstance();
 
     private MappingManager manager;
-    private Mapper<UserRatingsDao> mapper;
-    private Result<UserRatingsDao> result;
+    private Mapper<UserRatingsDto> mapper;
+    private Result<UserRatingsDto> result;
     private ResultSet resultSet;
 
     @Before
@@ -52,39 +52,39 @@ public class UserRatingsQueryTest {
     @Test
     public void testAdd() {
         mockGetMethod();
-        tc.USER_RATINGS_DAO.setContentType("Album");
-        UserRatingsQuery.add(queryAccessor, manager, tc.USER_RATINGS_DAO);
-        verify(queryAccessor, atLeastOnce()).setUserRating(tc.USER_RATINGS_DAO.getUserId(),
-                                                           tc.USER_RATINGS_DAO.getContentUuid(),
-                                                           tc.USER_RATINGS_DAO.getContentType(),
-                                                           tc.USER_RATINGS_DAO.getRating());
+        tc.USER_RATINGS_DTO.setContentType("Album");
+        UserRatingsQuery.add(queryAccessor, manager, tc.USER_RATINGS_DTO);
+        verify(queryAccessor, atLeastOnce()).setUserRating(tc.USER_RATINGS_DTO.getUserId(),
+                                                           tc.USER_RATINGS_DTO.getContentUuid(),
+                                                           tc.USER_RATINGS_DTO.getContentType(),
+                                                           tc.USER_RATINGS_DTO.getRating());
     }
 
     @Test(expected = RuntimeException.class)
     public void testUnableToAdd() {
         mockNullGetMethod();
-        UserRatingsQuery.add(queryAccessor, manager, tc.USER_RATINGS_DAO);
+        UserRatingsQuery.add(queryAccessor, manager, tc.USER_RATINGS_DTO);
     }
 
     @Test(expected = RuntimeException.class)
     public void testInvalidContentTypeExceptionAdd() {
-        tc.USER_RATINGS_DAO.setContentType("INVALID_CONTENT_TYPE");
-        UserRatingsQuery.add(queryAccessor, manager, tc.USER_RATINGS_DAO);
+        tc.USER_RATINGS_DTO.setContentType("INVALID_CONTENT_TYPE");
+        UserRatingsQuery.add(queryAccessor, manager, tc.USER_RATINGS_DTO);
     }
 
     @Test(expected = RuntimeException.class)
     public void testUnableToAddException() {
         mockNullGetMethod();
-        UserRatingsQuery.add(queryAccessor, manager, tc.USER_RATINGS_DAO);
+        UserRatingsQuery.add(queryAccessor, manager, tc.USER_RATINGS_DTO);
     }
 
     @Test
     public void testGetRating() {
         mockGetMethod();
-        UserRatingsDao results = UserRatingsQuery.getRating(queryAccessor, manager, tc.USER_ID, tc.ALBUM_ID,
+        UserRatingsDto results = UserRatingsQuery.getRating(queryAccessor, manager, tc.USER_ID, tc.ALBUM_ID,
                                                             tc.ALBUM_CONTENT_TYPE);
         assertNotNull(results);
-        assertEquals(results, tc.USER_RATINGS_DAO);
+        assertEquals(results, tc.USER_RATINGS_DTO);
     }
 
     @Test(expected = RuntimeException.class)
@@ -149,15 +149,15 @@ public class UserRatingsQueryTest {
     private void mockGetMethod() {
         Mockito.when(queryAccessor.getUserRating(Mockito.anyObject(), Mockito.anyObject(), Mockito.anyObject()))
             .thenReturn(resultSet);
-        PowerMockito.when(manager.mapper(UserRatingsDao.class)).thenReturn(mapper);
+        PowerMockito.when(manager.mapper(UserRatingsDto.class)).thenReturn(mapper);
         PowerMockito.when(mapper.map(resultSet)).thenReturn(result);
-        PowerMockito.when(result.one()).thenReturn(tc.USER_RATINGS_DAO);
+        PowerMockito.when(result.one()).thenReturn(tc.USER_RATINGS_DTO);
     }
 
     private void mockNullGetMethod() {
         Mockito.when(queryAccessor.getUserRating(Mockito.anyObject(), Mockito.anyObject(), Mockito.anyObject()))
             .thenReturn(resultSet);
-        PowerMockito.when(manager.mapper(UserRatingsDao.class)).thenReturn(mapper);
+        PowerMockito.when(manager.mapper(UserRatingsDto.class)).thenReturn(mapper);
         PowerMockito.when(mapper.map(resultSet)).thenReturn(result);
         PowerMockito.when(result.one()).thenReturn(null);
     }
