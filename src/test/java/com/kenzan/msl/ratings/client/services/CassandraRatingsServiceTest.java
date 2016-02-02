@@ -10,7 +10,7 @@ import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
 
-import com.kenzan.msl.ratings.client.dao.UserRatingsDao;
+import com.kenzan.msl.ratings.client.dto.UserRatingsDto;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.datastax.driver.mapping.MappingManager;
 import com.kenzan.msl.ratings.client.TestConstants;
-import com.kenzan.msl.ratings.client.dao.AverageRatingsDao;
+import com.kenzan.msl.ratings.client.dto.AverageRatingsDto;
 import com.kenzan.msl.ratings.client.cassandra.query.AverageRatingsQuery;
 import com.kenzan.msl.ratings.client.cassandra.query.UserRatingsQuery;
 
@@ -64,12 +64,12 @@ public class CassandraRatingsServiceTest {
         manager = PowerMockito.mock(MappingManager.class);
         PowerMockito.whenNew(MappingManager.class).withAnyArguments().thenReturn(manager);
 
-        Mapper<UserRatingsDao> myUserRatingsMapper = PowerMockito.mock(Mapper.class);
-        PowerMockito.when(manager.mapper(UserRatingsDao.class)).thenReturn(myUserRatingsMapper);
+        Mapper<UserRatingsDto> myUserRatingsMapper = PowerMockito.mock(Mapper.class);
+        PowerMockito.when(manager.mapper(UserRatingsDto.class)).thenReturn(myUserRatingsMapper);
         PowerMockito.when(myUserRatingsMapper.map(resultSet)).thenReturn(null);
         
-        Mapper<AverageRatingsDao> myAverageRatingsMapper = PowerMockito.mock(Mapper.class);
-        PowerMockito.when(manager.mapper(AverageRatingsDao.class)).thenReturn(myAverageRatingsMapper);
+        Mapper<AverageRatingsDto> myAverageRatingsMapper = PowerMockito.mock(Mapper.class);
+        PowerMockito.when(manager.mapper(AverageRatingsDto.class)).thenReturn(myAverageRatingsMapper);
         PowerMockito.when(myAverageRatingsMapper.map(resultSet)).thenReturn(null);
 
         PowerMockito.mockStatic(AverageRatingsQuery.class);
@@ -81,22 +81,22 @@ public class CassandraRatingsServiceTest {
         PowerMock.replayAll();
 
         cassandraRatingsService = CassandraRatingsService.getInstance();
-        Observable<Void> results = cassandraRatingsService.addOrUpdateAverageRating(tc.AVERAGE_RATINGS_DAO);
+        Observable<Void> results = cassandraRatingsService.addOrUpdateAverageRating(tc.AVERAGE_RATINGS_DTO);
         assertTrue(results.isEmpty().toBlocking().first());
     }
 
     @Test
     public void testGetAverageRating() {
         PowerMockito.when(AverageRatingsQuery.get(Mockito.anyObject(), Mockito.anyObject(), Mockito.anyObject(),
-                                                  Mockito.anyObject())).thenReturn(tc.AVERAGE_RATINGS_DAO);
+                                                  Mockito.anyObject())).thenReturn(tc.AVERAGE_RATINGS_DTO);
 
         PowerMock.replayAll();
 
         cassandraRatingsService = CassandraRatingsService.getInstance();
-        Observable<AverageRatingsDao> results = cassandraRatingsService.getAverageRating(tc.ALBUM_ID,
+        Observable<AverageRatingsDto> results = cassandraRatingsService.getAverageRating(tc.ALBUM_ID,
                                                                                          tc.ALBUM_CONTENT_TYPE);
         assertNotNull(results);
-        assertEquals(tc.AVERAGE_RATINGS_DAO, results.toBlocking().first());
+        assertEquals(tc.AVERAGE_RATINGS_DTO, results.toBlocking().first());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class CassandraRatingsServiceTest {
         PowerMock.replayAll();
 
         cassandraRatingsService = CassandraRatingsService.getInstance();
-        Observable<Void> results = cassandraRatingsService.addOrUpdateUserRatings(tc.USER_RATINGS_DAO);
+        Observable<Void> results = cassandraRatingsService.addOrUpdateUserRatings(tc.USER_RATINGS_DTO);
         assertTrue(results.isEmpty().toBlocking().first());
     }
 
@@ -125,14 +125,14 @@ public class CassandraRatingsServiceTest {
     public void testGetUserRating() {
         PowerMockito.when(UserRatingsQuery.getRating(Mockito.anyObject(), Mockito.anyObject(), Mockito.anyObject(),
                                                      Mockito.anyObject(), Mockito.anyObject()))
-            .thenReturn(tc.USER_RATINGS_DAO);
+            .thenReturn(tc.USER_RATINGS_DTO);
         PowerMock.replayAll();
 
         cassandraRatingsService = CassandraRatingsService.getInstance();
-        Observable<UserRatingsDao> results = cassandraRatingsService.getUserRating(tc.USER_ID, tc.ALBUM_CONTENT_TYPE,
+        Observable<UserRatingsDto> results = cassandraRatingsService.getUserRating(tc.USER_ID, tc.ALBUM_CONTENT_TYPE,
                                                                                    tc.ALBUM_ID);
         assertNotNull(results);
-        assertEquals(tc.USER_RATINGS_DAO, results.toBlocking().first());
+        assertEquals(tc.USER_RATINGS_DTO, results.toBlocking().first());
     }
 
     @Test
@@ -155,7 +155,7 @@ public class CassandraRatingsServiceTest {
     public void testMapUserRatings() {
         PowerMock.replayAll();
         cassandraRatingsService = CassandraRatingsService.getInstance();
-        Observable<Result<UserRatingsDao>> results = cassandraRatingsService.mapUserRatings(Observable.just(resultSet));
+        Observable<Result<UserRatingsDto>> results = cassandraRatingsService.mapUserRatings(Observable.just(resultSet));
         assertNull(results.toBlocking().first());
     }
 
