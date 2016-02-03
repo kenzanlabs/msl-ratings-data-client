@@ -3,6 +3,8 @@
  */
 package com.kenzan.msl.ratings.client.services;
 
+import com.netflix.config.DynamicPropertyFactory;
+import com.netflix.config.DynamicStringProperty;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
@@ -24,14 +26,23 @@ public class CassandraRatingsService
     private QueryAccessor queryAccessor;
     private MappingManager mappingManager;
 
+    private static final String DEFAULT_CONTACT_POINT = "127.0.0.1";
+    private static final String DEFAULT_MSL_KEYSPACE = "msl";
+
     private static CassandraRatingsService instance = null;
 
     private CassandraRatingsService() {
-        // TODO: Get the contact point from config param
-        Cluster cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
+        String configUrl = "file://" + System.getProperty("user.dir");
+        configUrl += "/../msl-ratings-data-client-config/archaius-config.properties";
+        String additionalUrlsProperty = "archaius.configurationSource.additionalUrls";
+        System.setProperty(additionalUrlsProperty, configUrl);
 
-        // TODO: Get the keyspace from config param
-        Session session = cluster.connect("msl");
+        DynamicPropertyFactory propertyFactory = DynamicPropertyFactory.getInstance();
+        DynamicStringProperty contactPoint = propertyFactory.getStringProperty("contact_point", DEFAULT_CONTACT_POINT);
+        Cluster cluster = Cluster.builder().addContactPoint(contactPoint.getValue()).build();
+
+        DynamicStringProperty keyspace = propertyFactory.getStringProperty("keyspace", DEFAULT_MSL_KEYSPACE);
+        Session session = cluster.connect(keyspace.getValue());
 
         mappingManager = new MappingManager(session);
         queryAccessor = mappingManager.createAccessor(QueryAccessor.class);
