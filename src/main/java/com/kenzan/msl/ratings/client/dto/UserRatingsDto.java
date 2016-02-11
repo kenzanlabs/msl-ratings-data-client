@@ -10,7 +10,7 @@ import java.util.UUID;
 import com.kenzan.msl.common.dto.AbstractDto;
 
 /**
- * @author billschwanitz
+ * @author kenzan
  */
 @Table(name = "user_ratings")
 public class UserRatingsDto extends AbstractDto {

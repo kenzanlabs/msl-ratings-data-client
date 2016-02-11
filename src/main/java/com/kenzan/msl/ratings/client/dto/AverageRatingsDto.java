@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  *
  *
- * @author billschwanitz
+ * @author kenzan
  */
 @Table(name = "average_ratings")
 public class AverageRatingsDto extends AbstractDto {
