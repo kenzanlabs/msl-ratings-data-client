@@ -33,7 +33,7 @@ public class CassandraRatingsService
 
     private CassandraRatingsService() {
         String configUrl = "file://" + System.getProperty("user.dir");
-        configUrl += "/../msl-ratings-data-client-config/archaius-config.properties";
+        configUrl += "/../msl-ratings-data-client-config/data-client-config.properties";
         String additionalUrlsProperty = "archaius.configurationSource.additionalUrls";
         System.setProperty(additionalUrlsProperty, configUrl);
 
