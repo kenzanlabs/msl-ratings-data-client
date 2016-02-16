@@ -20,7 +20,7 @@ public interface RatingsService {
 
     Observable<Void> addOrUpdateAverageRating(AverageRatingsDto averageRatingDto);
 
-    Observable<AverageRatingsDto> getAverageRating(UUID contentId, String contentType);
+    Observable<Optional<AverageRatingsDto>> getAverageRating(UUID contentId, String contentType);
 
     Observable<Void> deleteAverageRating(UUID contentId, String contentType);
 
@@ -30,7 +30,7 @@ public interface RatingsService {
 
     Observable<Void> addOrUpdateUserRatings(UserRatingsDto userRatingsDto);
 
-    Observable<UserRatingsDto> getUserRating(UUID userUuid, String contentType, UUID contentUuid);
+    Observable<Optional<UserRatingsDto>> getUserRating(UUID userUuid, String contentType, UUID contentUuid);
 
     Observable<ResultSet> getUserRatings(UUID userUuid, Optional<String> contentType, Optional<Integer> limit);
 

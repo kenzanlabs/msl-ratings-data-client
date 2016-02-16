@@ -3,6 +3,7 @@ package com.kenzan.msl.ratings.client.cassandra.query;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.Result;
+import com.google.common.base.Optional;
 import com.kenzan.msl.ratings.client.dto.AverageRatingsDto;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -20,6 +21,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
@@ -78,9 +80,10 @@ public class AverageRatingsQueryTest {
     @Test
     public void testGet() {
         mockGetMethod();
-        AverageRatingsDto results = AverageRatingsQuery.get(queryAccessor, manager, tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
-        assertNotNull(results);
-        assertEquals(results, tc.AVERAGE_RATINGS_DTO);
+        Optional<AverageRatingsDto> results = AverageRatingsQuery.get(queryAccessor, manager, tc.ALBUM_ID,
+                                                                      tc.ALBUM_CONTENT_TYPE);
+        assertTrue(results.isPresent());
+        assertEquals(results.get(), tc.AVERAGE_RATINGS_DTO);
     }
 
     @Test(expected = RuntimeException.class)
