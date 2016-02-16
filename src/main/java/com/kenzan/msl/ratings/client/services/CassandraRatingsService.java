@@ -77,7 +77,7 @@ public class CassandraRatingsService
      * @param contentType String
      * @return Observable<AverageRatingsDto>
      */
-    public Observable<AverageRatingsDto> getAverageRating(UUID contentId, String contentType) {
+    public Observable<Optional<AverageRatingsDto>> getAverageRating(UUID contentId, String contentType) {
         return Observable.just(AverageRatingsQuery.get(queryAccessor, mappingManager, contentId, contentType));
     }
 
@@ -116,7 +116,7 @@ public class CassandraRatingsService
      * @param contentUuid java.util.UUID
      * @return Observable<UserRatingsDto>
      */
-    public Observable<UserRatingsDto> getUserRating(UUID userUuid, String contentType, UUID contentUuid) {
+    public Observable<Optional<UserRatingsDto>> getUserRating(UUID userUuid, String contentType, UUID contentUuid) {
         return Observable.just(UserRatingsQuery.getRating(queryAccessor, mappingManager, userUuid, contentUuid,
                                                           contentType));
     }
