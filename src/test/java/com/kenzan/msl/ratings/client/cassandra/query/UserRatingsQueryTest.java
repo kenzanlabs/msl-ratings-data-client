@@ -22,6 +22,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
@@ -81,10 +82,10 @@ public class UserRatingsQueryTest {
     @Test
     public void testGetRating() {
         mockGetMethod();
-        UserRatingsDto results = UserRatingsQuery.getRating(queryAccessor, manager, tc.USER_ID, tc.ALBUM_ID,
-                                                            tc.ALBUM_CONTENT_TYPE);
-        assertNotNull(results);
-        assertEquals(results, tc.USER_RATINGS_DTO);
+        Optional<UserRatingsDto> results = UserRatingsQuery.getRating(queryAccessor, manager, tc.USER_ID, tc.ALBUM_ID,
+                                                                      tc.ALBUM_CONTENT_TYPE);
+        assertTrue(results.isPresent());
+        assertEquals(results.get(), tc.USER_RATINGS_DTO);
     }
 
     @Test(expected = RuntimeException.class)
