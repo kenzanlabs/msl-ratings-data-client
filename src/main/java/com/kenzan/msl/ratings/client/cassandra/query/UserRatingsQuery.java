@@ -27,8 +27,8 @@ public class UserRatingsQuery extends RatingsHelper {
             queryAccessor.setUserRating(userRatingsDto.getUserId(), userRatingsDto.getContentUuid(), contentType,
                                         userRatingsDto.getRating());
             // Verifies that user rating was in fact added
-            if ( getRating(queryAccessor, manager, userRatingsDto.getUserId(), userRatingsDto.getContentUuid(),
-                           contentType) == null ) {
+            if ( !getRating(queryAccessor, manager, userRatingsDto.getUserId(), userRatingsDto.getContentUuid(),
+                            contentType).isPresent() ) {
                 throw new RuntimeException(String.format("Unable to add to user_ratings, contentId: %s, userId: %s",
                                                          userRatingsDto.getContentUuid(), userRatingsDto.getUserId()));
             }
@@ -48,14 +48,26 @@ public class UserRatingsQuery extends RatingsHelper {
      * @param contentType String
      * @return com.kenzan.msl.ratings.client.dto.UserRatingsDto
      */
-    public static UserRatingsDto getRating(final QueryAccessor queryAccessor, final MappingManager manager,
-                                           final UUID userId, final UUID contentId, final String contentType) {
+    public static Optional<UserRatingsDto> getRating(final QueryAccessor queryAccessor, final MappingManager manager,
+                                                     final UUID userId, final UUID contentId, final String contentType) {
         if ( isValidContentType(contentType) ) {
             ResultSet userRatingResult = queryAccessor.getUserRating(userId, contentId, contentType);
-            return manager.mapper(UserRatingsDto.class).map(userRatingResult).one();
+
+            if ( userRatingResult == null ) {
+                return Optional.absent();
+            }
+
+            UserRatingsDto results = manager.mapper(UserRatingsDto.class).map(userRatingResult).one();
+
+            if ( results == null ) {
+                return Optional.absent();
+            }
+            else {
+                return Optional.of(results);
+            }
         }
-        
-		throw new RuntimeException(String.format("Invalid contentType: %s", contentType));
+
+        throw new RuntimeException(String.format("Invalid contentType: %s", contentType));
     }
 
     /**
@@ -99,7 +111,7 @@ public class UserRatingsQuery extends RatingsHelper {
         if ( isValidContentType(contentType) ) {
             queryAccessor.deleteUserRating(userId, contentId, contentType);
             // Verifies that user rating was in fact removed
-            if ( getRating(queryAccessor, manager, userId, contentId, contentType) != null ) {
+            if ( getRating(queryAccessor, manager, userId, contentId, contentType).isPresent() ) {
                 throw new RuntimeException(String.format("Unable to remove contentId: %s from user_ratings table",
                                                          contentId));
             }
