@@ -75,8 +75,8 @@ public class UserRatingsQuery extends RatingsHelper {
      *
      * @param queryAccessor com.kenzan.msl.ratings.client.cassandra.QueryAccessor
      * @param userId java.util.UUID
-     * @param contentType com.google.common.base.Optional > String
-     * @param limit com.google.common.base.Optional > Integer
+     * @param contentType com.google.common.base.Optional&lt;String&gt;
+     * @param limit com.google.common.base.Optional&lt;Integer&gt;
      * @return com.datastax.driver.core.ResultSet
      */
     public static ResultSet getRatings(final QueryAccessor queryAccessor, final UUID userId,

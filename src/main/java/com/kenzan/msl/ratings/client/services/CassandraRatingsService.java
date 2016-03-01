@@ -63,7 +63,7 @@ public class CassandraRatingsService
      * Adds or update an average rating to the average_ratings table
      *
      * @param averageRatingDto com.kenzan.msl.ratings.client.dto.AverageRatingsDto
-     * @return Observable<Void>
+     * @return Observable&lt;Void&gt;
      */
     public Observable<Void> addOrUpdateAverageRating(AverageRatingsDto averageRatingDto) {
         AverageRatingsQuery.add(queryAccessor, mappingManager, averageRatingDto);
@@ -75,7 +75,7 @@ public class CassandraRatingsService
      *
      * @param contentId java.util.UUID
      * @param contentType String
-     * @return Observable<AverageRatingsDto>
+     * @return Observable&lt;AverageRatingsDto&gt;
      */
     public Observable<Optional<AverageRatingsDto>> getAverageRating(UUID contentId, String contentType) {
         return Observable.just(AverageRatingsQuery.get(queryAccessor, mappingManager, contentId, contentType));
@@ -86,7 +86,7 @@ public class CassandraRatingsService
      *
      * @param contentId java.util.UUID
      * @param contentType String
-     * @return Observable<Void>
+     * @return Observable&lt;Void&gt;
      */
     public Observable<Void> deleteAverageRating(UUID contentId, String contentType) {
         AverageRatingsQuery.delete(queryAccessor, mappingManager, contentId, contentType);
@@ -101,7 +101,7 @@ public class CassandraRatingsService
      * Adds a user rating to the user_ratings table
      *
      * @param userRatingsDto com.kenzan.msl.ratings.client.dto.UserRatingsDto
-     * @return Observable<Void>
+     * @return Observable&lt;Void&gt;
      */
     public Observable<Void> addOrUpdateUserRatings(UserRatingsDto userRatingsDto) {
         UserRatingsQuery.add(queryAccessor, mappingManager, userRatingsDto);
@@ -114,7 +114,7 @@ public class CassandraRatingsService
      * @param userUuid java.util.UUID
      * @param contentType String
      * @param contentUuid java.util.UUID
-     * @return Observable<UserRatingsDto>
+     * @return Observable&lt;UserRatingsDto&gt;
      */
     public Observable<Optional<UserRatingsDto>> getUserRating(UUID userUuid, String contentType, UUID contentUuid) {
         return Observable.just(UserRatingsQuery.getRating(queryAccessor, mappingManager, userUuid, contentUuid,
@@ -125,9 +125,9 @@ public class CassandraRatingsService
      * Retrieve a set of user ratings from the user_ratings table
      *
      * @param userUuid java.util.UUID
-     * @param contentType Optional<String>
-     * @param limit Optional<Integer>
-     * @return Observable<ResultSet>
+     * @param contentType Optional&lt;String&gt;
+     * @param limit Optional&lt;Integer&gt;
+     * @return Observable&lt;ResultSet&gt;
      */
     public Observable<ResultSet> getUserRatings(UUID userUuid, Optional<String> contentType, Optional<Integer> limit) {
         return Observable.just(UserRatingsQuery.getRatings(queryAccessor, userUuid, contentType, limit));
@@ -136,8 +136,8 @@ public class CassandraRatingsService
     /**
      * Maps a result set object into a userRatingsDto result set
      * 
-     * @param object Observable<ResultSet>
-     * @return Observable<Result<UserRatingsDto>>
+     * @param object Observable&lt;ResultSet&gt;
+     * @return Observable&lt;Result&lt;UserRatingsDto&gt;&gt;
      */
     public Observable<Result<UserRatingsDto>> mapUserRatings(Observable<ResultSet> object) {
         return Observable.just(mappingManager.mapper(UserRatingsDto.class).map(object.toBlocking().first()));
@@ -149,7 +149,7 @@ public class CassandraRatingsService
      * @param userUuid java.util.UUID
      * @param contentType String
      * @param contentUuid java.util.UUID
-     * @return Observable<Void>
+     * @return Observable&lt;Void&gt;
      */
     public Observable<Void> deleteUserRatings(UUID userUuid, String contentType, UUID contentUuid) {
         UserRatingsQuery.remove(queryAccessor, mappingManager, userUuid, contentUuid, contentType);
