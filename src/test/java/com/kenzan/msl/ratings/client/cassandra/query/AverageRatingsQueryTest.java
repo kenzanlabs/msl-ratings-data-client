@@ -26,103 +26,103 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ MappingManager.class })
+@PrepareForTest({MappingManager.class})
 public class AverageRatingsQueryTest {
 
-    @Mock
-    private QueryAccessor queryAccessor;
+  @Mock
+  private QueryAccessor queryAccessor;
 
-    private TestConstants tc = TestConstants.getInstance();
+  private TestConstants tc = TestConstants.getInstance();
 
-    private MappingManager manager;
-    private Mapper<AverageRatingsDto> mapper;
-    private Result<AverageRatingsDto> result;
-    private ResultSet resultSet;
+  private MappingManager manager;
+  private Mapper<AverageRatingsDto> mapper;
+  private Result<AverageRatingsDto> result;
+  private ResultSet resultSet;
 
-    @Before
-    public void init()
-        throws Exception {
-        MockitoAnnotations.initMocks(this);
+  @Before
+  public void init() throws Exception {
+    MockitoAnnotations.initMocks(this);
 
-        resultSet = EasyMock.createMock(ResultSet.class);
-        manager = PowerMockito.mock(MappingManager.class);
-        mapper = PowerMockito.mock(Mapper.class);
-        result = PowerMockito.mock(Result.class);
-    }
+    resultSet = EasyMock.createMock(ResultSet.class);
+    manager = PowerMockito.mock(MappingManager.class);
+    mapper = PowerMockito.mock(Mapper.class);
+    result = PowerMockito.mock(Result.class);
+  }
 
-    @Test
-    public void testAdd() {
-        mockGetMethod();
-        AverageRatingsQuery.add(queryAccessor, manager, tc.AVERAGE_RATINGS_DTO);
-        verify(queryAccessor, atLeastOnce()).setAverageRating(tc.AVERAGE_RATINGS_DTO.getContentId(),
-                                                              tc.AVERAGE_RATINGS_DTO.getContentType(),
-                                                              tc.AVERAGE_RATINGS_DTO.getNumRating(),
-                                                              tc.AVERAGE_RATINGS_DTO.getSumRating());
-    }
+  @Test
+  public void testAdd() {
+    mockGetMethod();
+    AverageRatingsQuery.add(queryAccessor, manager, tc.AVERAGE_RATINGS_DTO);
+    verify(queryAccessor, atLeastOnce()).setAverageRating(tc.AVERAGE_RATINGS_DTO.getContentId(),
+        tc.AVERAGE_RATINGS_DTO.getContentType(), tc.AVERAGE_RATINGS_DTO.getNumRating(),
+        tc.AVERAGE_RATINGS_DTO.getSumRating());
+  }
 
-    @Test(expected = RuntimeException.class)
-    public void testUnableToAdd() {
-        mockNullGetMethod();
-        AverageRatingsQuery.add(queryAccessor, manager, tc.AVERAGE_RATINGS_DTO);
-    }
+  @Test(expected = RuntimeException.class)
+  public void testUnableToAdd() {
+    mockNullGetMethod();
+    AverageRatingsQuery.add(queryAccessor, manager, tc.AVERAGE_RATINGS_DTO);
+  }
 
-    @Test(expected = RuntimeException.class)
-    public void testInvalidContentTypeExceptionAdd() {
-        AverageRatingsQuery.get(queryAccessor, manager, tc.ALBUM_ID, "INVALID_CONTENT_TYPE");
-    }
+  @Test(expected = RuntimeException.class)
+  public void testInvalidContentTypeExceptionAdd() {
+    AverageRatingsQuery.get(queryAccessor, manager, tc.ALBUM_ID, "INVALID_CONTENT_TYPE");
+  }
 
-    @Test(expected = RuntimeException.class)
-    public void testUnableToAddException() {
-        mockNullGetMethod();
-        AverageRatingsQuery.add(queryAccessor, manager, tc.AVERAGE_RATINGS_DTO);
-    }
+  @Test(expected = RuntimeException.class)
+  public void testUnableToAddException() {
+    mockNullGetMethod();
+    AverageRatingsQuery.add(queryAccessor, manager, tc.AVERAGE_RATINGS_DTO);
+  }
 
-    @Test
-    public void testGet() {
-        mockGetMethod();
-        Optional<AverageRatingsDto> results = AverageRatingsQuery.get(queryAccessor, manager, tc.ALBUM_ID,
-                                                                      tc.ALBUM_CONTENT_TYPE);
-        assertTrue(results.isPresent());
-        assertEquals(results.get(), tc.AVERAGE_RATINGS_DTO);
-    }
+  @Test
+  public void testGet() {
+    mockGetMethod();
+    Optional<AverageRatingsDto> results =
+        AverageRatingsQuery.get(queryAccessor, manager, tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
+    assertTrue(results.isPresent());
+    assertEquals(results.get(), tc.AVERAGE_RATINGS_DTO);
+  }
 
-    @Test(expected = RuntimeException.class)
-    public void testGetInvalidContentType() {
-        AverageRatingsQuery.get(queryAccessor, manager, tc.ALBUM_ID, "INVALID_CONTENT_TYPE");
-    }
+  @Test(expected = RuntimeException.class)
+  public void testGetInvalidContentType() {
+    AverageRatingsQuery.get(queryAccessor, manager, tc.ALBUM_ID, "INVALID_CONTENT_TYPE");
+  }
 
-    @Test
-    public void testDelete() {
-        mockNullGetMethod();
-        AverageRatingsQuery.delete(queryAccessor, manager, tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
-        verify(queryAccessor, atLeastOnce()).deleteAverageRating(tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
-    }
+  @Test
+  public void testDelete() {
+    mockNullGetMethod();
+    AverageRatingsQuery.delete(queryAccessor, manager, tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
+    verify(queryAccessor, atLeastOnce()).deleteAverageRating(tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
+  }
 
-    @Test(expected = RuntimeException.class)
-    public void testUnableToDelete() {
-        mockGetMethod();
-        AverageRatingsQuery.delete(queryAccessor, manager, tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
-        verify(queryAccessor, atLeastOnce()).deleteAverageRating(tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
-    }
+  @Test(expected = RuntimeException.class)
+  public void testUnableToDelete() {
+    mockGetMethod();
+    AverageRatingsQuery.delete(queryAccessor, manager, tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
+    verify(queryAccessor, atLeastOnce()).deleteAverageRating(tc.ALBUM_ID, tc.ALBUM_CONTENT_TYPE);
+  }
 
-    @Test(expected = RuntimeException.class)
-    public void testDeleteInvalidContentException() {
-        AverageRatingsQuery.delete(queryAccessor, manager, null, null);
-    }
+  @Test(expected = RuntimeException.class)
+  public void testDeleteInvalidContentException() {
+    AverageRatingsQuery.delete(queryAccessor, manager, null, null);
+  }
 
-    /* ******************************************************* */
+  /* ******************************************************* */
 
-    private void mockGetMethod() {
-        Mockito.when(queryAccessor.getAverageRating(Mockito.anyObject(), Mockito.anyObject())).thenReturn(resultSet);
-        PowerMockito.when(manager.mapper(AverageRatingsDto.class)).thenReturn(mapper);
-        PowerMockito.when(mapper.map(resultSet)).thenReturn(result);
-        PowerMockito.when(result.one()).thenReturn(tc.AVERAGE_RATINGS_DTO);
-    }
+  private void mockGetMethod() {
+    Mockito.when(queryAccessor.getAverageRating(Mockito.anyObject(), Mockito.anyObject()))
+        .thenReturn(resultSet);
+    PowerMockito.when(manager.mapper(AverageRatingsDto.class)).thenReturn(mapper);
+    PowerMockito.when(mapper.map(resultSet)).thenReturn(result);
+    PowerMockito.when(result.one()).thenReturn(tc.AVERAGE_RATINGS_DTO);
+  }
 
-    private void mockNullGetMethod() {
-        Mockito.when(queryAccessor.getAverageRating(Mockito.anyObject(), Mockito.anyObject())).thenReturn(resultSet);
-        PowerMockito.when(manager.mapper(AverageRatingsDto.class)).thenReturn(mapper);
-        PowerMockito.when(mapper.map(resultSet)).thenReturn(result);
-        PowerMockito.when(result.one()).thenReturn(null);
-    }
+  private void mockNullGetMethod() {
+    Mockito.when(queryAccessor.getAverageRating(Mockito.anyObject(), Mockito.anyObject()))
+        .thenReturn(resultSet);
+    PowerMockito.when(manager.mapper(AverageRatingsDto.class)).thenReturn(mapper);
+    PowerMockito.when(mapper.map(resultSet)).thenReturn(result);
+    PowerMockito.when(result.one()).thenReturn(null);
+  }
 }
