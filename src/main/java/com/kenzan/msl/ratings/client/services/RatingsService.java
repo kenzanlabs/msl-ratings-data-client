@@ -14,27 +14,29 @@ import java.util.UUID;
 
 public interface RatingsService {
 
-    // ================================================================================================================
-    // AVERAGE RATINGS
-    // ================================================================================================================
+  // ================================================================================================================
+  // AVERAGE RATINGS
+  // ================================================================================================================
 
-    Observable<Void> addOrUpdateAverageRating(AverageRatingsDto averageRatingDto);
+  Observable<Void> addOrUpdateAverageRating(AverageRatingsDto averageRatingDto);
 
-    Observable<Optional<AverageRatingsDto>> getAverageRating(UUID contentId, String contentType);
+  Observable<Optional<AverageRatingsDto>> getAverageRating(UUID contentId, String contentType);
 
-    Observable<Void> deleteAverageRating(UUID contentId, String contentType);
+  Observable<Void> deleteAverageRating(UUID contentId, String contentType);
 
-    // ================================================================================================================
-    // USER RATINGS
-    // ================================================================================================================
+  // ================================================================================================================
+  // USER RATINGS
+  // ================================================================================================================
 
-    Observable<Void> addOrUpdateUserRatings(UserRatingsDto userRatingsDto);
+  Observable<Void> addOrUpdateUserRatings(UserRatingsDto userRatingsDto);
 
-    Observable<Optional<UserRatingsDto>> getUserRating(UUID userUuid, String contentType, UUID contentUuid);
+  Observable<Optional<UserRatingsDto>> getUserRating(UUID userUuid, String contentType,
+      UUID contentUuid);
 
-    Observable<ResultSet> getUserRatings(UUID userUuid, Optional<String> contentType, Optional<Integer> limit);
+  Observable<ResultSet> getUserRatings(UUID userUuid, Optional<String> contentType,
+      Optional<Integer> limit);
 
-    Observable<Result<UserRatingsDto>> mapUserRatings(Observable<ResultSet> object);
+  Observable<Result<UserRatingsDto>> mapUserRatings(Observable<ResultSet> object);
 
-    Observable<Void> deleteUserRatings(UUID userUuid, String contentType, UUID contentUuid);
+  Observable<Void> deleteUserRatings(UUID userUuid, String contentType, UUID contentUuid);
 }
