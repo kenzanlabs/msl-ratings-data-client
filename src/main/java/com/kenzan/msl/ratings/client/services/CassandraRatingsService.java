@@ -3,7 +3,6 @@
  */
 package com.kenzan.msl.ratings.client.services;
 
-import com.kenzan.msl.ratings.client.archaius.ArchaiusHelper;
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
 import com.datastax.driver.core.Cluster;
@@ -69,7 +68,6 @@ public class CassandraRatingsService implements RatingsService {
   }
 
   private static void initializeDynamicProperties(Optional<HashMap<String, Optional<String>>> archaiusProperties) {
-    ArchaiusHelper.setupArchaius();
     DynamicPropertyFactory propertyFactory = DynamicPropertyFactory.getInstance();
 
     keyspace = propertyFactory.getStringProperty("keyspace", DEFAULT_MSL_KEYSPACE);
