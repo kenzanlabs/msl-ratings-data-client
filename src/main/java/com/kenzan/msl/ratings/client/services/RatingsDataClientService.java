@@ -4,15 +4,17 @@
 package com.kenzan.msl.ratings.client.services;
 
 import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
+import com.kenzan.msl.ratings.client.cassandra.QueryAccessor;
 import com.kenzan.msl.ratings.client.dto.AverageRatingsDto;
 import com.kenzan.msl.ratings.client.dto.UserRatingsDto;
 import rx.Observable;
 
 import java.util.UUID;
 
-public interface RatingsService {
+public interface RatingsDataClientService {
 
   // ================================================================================================================
   // AVERAGE RATINGS
@@ -39,4 +41,12 @@ public interface RatingsService {
   Observable<Result<UserRatingsDto>> mapUserRatings(Observable<ResultSet> object);
 
   Observable<Void> deleteUserRatings(UUID userUuid, String contentType, UUID contentUuid);
+
+  // ================================================================================================================
+  // MISC
+  // ================================================================================================================
+
+  QueryAccessor getQueryAccessor ();
+
+  MappingManager getMappingManager ();
 }
