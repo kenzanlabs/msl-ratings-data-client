@@ -4,7 +4,7 @@
     <groupId>msl.server</groupId>
     <artifactId>msl-ratings-data-client</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 
   <distributionManagement>
     <repository>
@@ -207,6 +207,13 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j-version}</version>
+        </dependency>
+
+        <!-- Google Inj -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>4.0</version>
         </dependency>
 
         <!-- NETFLIX -->
