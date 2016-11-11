@@ -6,7 +6,6 @@ import com.datastax.driver.mapping.MappingManager;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import com.kenzan.msl.ratings.client.archaius.ArchaiusHelper;
 import com.kenzan.msl.ratings.client.services.RatingsDataClientService;
 import com.kenzan.msl.ratings.client.services.RatingsDataClientServiceImpl;
 import com.netflix.config.DynamicPropertyFactory;
@@ -26,6 +25,10 @@ public class RatingsDataClientModule extends AbstractModule {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(RatingsDataClientModule.class);
 
+  private DynamicStringProperty keyspace = DynamicPropertyFactory.getInstance().getStringProperty("keyspace", DEFAULT_MSL_KEYSPACE);
+  private DynamicStringProperty domain = DynamicPropertyFactory.getInstance().getStringProperty("domain", DEFAULT_CLUSTER);
+  private DynamicStringProperty region = DynamicPropertyFactory.getInstance().getStringProperty("region", DEFAULT_MSL_REGION);
+
   @Override
   protected void configure() {
     bind(RatingsDataClientService.class).to(RatingsDataClientServiceImpl.class).asEagerSingleton();
@@ -34,14 +37,6 @@ public class RatingsDataClientModule extends AbstractModule {
   @Provides
   @Singleton
   public MappingManager getMappingManager () {
-
-    ArchaiusHelper.setupArchaius();
-    DynamicPropertyFactory propertyFactory = DynamicPropertyFactory.getInstance();
-
-    DynamicStringProperty keyspace = propertyFactory.getStringProperty("keyspace", DEFAULT_MSL_KEYSPACE);
-    DynamicStringProperty domain = propertyFactory.getStringProperty("domain", DEFAULT_CLUSTER);
-    DynamicStringProperty region = propertyFactory.getStringProperty("region", DEFAULT_MSL_REGION);
-
     Cluster.Builder builder = Cluster.builder();
     String domainValue = domain.getValue();
     if (StringUtils.isNotEmpty(domainValue)) {
