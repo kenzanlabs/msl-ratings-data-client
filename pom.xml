@@ -4,7 +4,7 @@
     <groupId>msl.server</groupId>
     <artifactId>msl-ratings-data-client</artifactId>
     <packaging>jar</packaging>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
 
   <distributionManagement>
     <repository>
@@ -353,7 +353,7 @@
 
         <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
 
-        <msl-server.version>1.3.0</msl-server.version>
+        <msl-server.version>1.4.0</msl-server.version>
     </properties>
 
 </project>
